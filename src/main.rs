@@ -1,24 +1,38 @@
 use array2d::Array2D;
 
+const LATIN: [[&str; 6]; 5] = [
+    ["a", "b", "c", "d", "e", "f"],
+    ["g", "h", "i", "j", "k", "l"],
+    ["m", "n", "o", "p", "q", "r"],
+    ["s", "t", "u", "v", "w", "x"],
+    ["y", "z", "!", "?", ":", " "]
+];
+
+const GALACTIC: [[&str; 6]; 5] = [
+    ["ᔑ", "ʖ", "ᓵ", "↸", "Ŀ", "⎓"],
+    ["ㅓ", "〒", "╎", "፧", "ꖌ", "ꖎ"],
+    ["ᒲ", "リ", "フ", "¡", "ᑑ", "።"],
+    ["ነ", "ﬧ", "⚍", "⍊", "∴", "/"],
+    ["॥", "Λ", "ʗ", "˨", "ᚴ", "ᚌ"]
+];
+
 fn main() {
-    let latin_rows = vec![
-        vec!["a", "b", "c", "d", "e", "f"],
-        vec!["g", "h", "i", "j", "k", "l"],
-        vec!["m", "n", "o", "p", "q", "r"],
-        vec!["s", "t", "u", "v", "w", "x"],
-        vec!["y", "z", "!", "?", ":", " "]
-    ];
-    let latin = Array2D::from_rows(&latin_rows);
 
-    let galactic_rows = vec![
-        vec!["ᔑ", "ʖ", "ᓵ", "↸", "Ŀ", "⎓"],
-        vec!["ㅓ", "〒", "╎", "፧", "ꖌ", "ꖎ"],
-        vec!["ᒲ", "リ", "フ", "¡", "ᑑ", "።"],
-        vec!["ነ", "ﬧ", "⚍", "⍊", "∴", "/"],
-        vec!["॥", "Λ", "ʗ", "˨", "ᚴ", "ᚌ"]
-    ];
-    let galactic = Array2D::from_rows(&galactic_rows);
+    println!("Latin: ");
+    for row in LATIN {
+        for element in row {
+            print!("{} ", element);
+        }
+        println!();
+    }
 
+    println!("\nGalactic: ");
+    for row in GALACTIC {
+        for element in row {
+            print!("{} ", element);
+        }
+        println!();
+    }
 
     
 }
