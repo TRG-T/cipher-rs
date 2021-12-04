@@ -40,4 +40,19 @@ fn main() {
         print!("{}", letter)
     }
     println!();
+
+    encrypt(reversed_text);
+}
+
+fn indexOf(letter: &str) {
+    for i in 0..5 {
+        let a= LATIN[i].iter().position(|&s| s == letter);
+        print!("{:?}", a);
+    }
+}
+
+fn encrypt(text: [&str; 4]) {
+    for x in 0..4 {
+        indexOf(text[x])
+    }
 }
