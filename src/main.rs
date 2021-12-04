@@ -1,5 +1,3 @@
-use array2d::Array2D;
-
 const LATIN: [[&str; 6]; 5] = [
     ["a", "b", "c", "d", "e", "f"],
     ["g", "h", "i", "j", "k", "l"],
@@ -34,5 +32,12 @@ fn main() {
         println!();
     }
 
-    
+    let text = &mut ["d", "u", "p", "a"];
+    let reversed_text = text.iter().rev();
+
+    print!("Reversed text: ");
+    for letter in reversed_text {
+        print!("{}", letter)
+    }
+    println!();
 }
