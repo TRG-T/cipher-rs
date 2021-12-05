@@ -15,25 +15,9 @@ const GALACTIC: [[&str; 6]; 5] = [
 ];
 
 fn main() {
-
-    println!("Latin: ");
-    for row in LATIN {
-        for element in row {
-            print!("{} ", element);
-        }
-        println!();
-    }
-
-    println!("\nGalactic: ");
-    for row in GALACTIC {
-        for element in row {
-            print!("{} ", element);
-        }
-        println!();
-    }
-
-    let text = &mut ["d", "u", "p", "a"];
-    let reversed_text = text.iter().rev();
+    let text = ["d", "u", "p", "a"];
+    let  reversed_text = text.iter().rev().collect::<Vec<_>>();
+    encrypt(reversed_text.as_slice());
 
     print!("Reversed text: ");
     for letter in reversed_text {
@@ -41,18 +25,25 @@ fn main() {
     }
     println!();
 
-    encrypt(reversed_text);
 }
 
-fn indexOf(letter: &str) {
-    for i in 0..5 {
-        let a= LATIN[i].iter().position(|&s| s == letter);
-        print!("{:?}", a);
+fn index_of(letter: &str) -> (usize, usize) {
+    for row in 0..5 {
+        let a= LATIN[row].iter().position(|&s| s == letter);
+        match a {
+            Some(column) => {
+                print!("{} {} | ", row, column);
+                return(row, column);
+            }
+            None => {}
+        }
     }
+    return(0, 0);
 }
 
-fn encrypt(text: [&str; 4]) {
+fn encrypt(text: &[&&str]) {
     for x in 0..4 {
-        indexOf(text[x])
+        let (row, column) = index_of(text[x]);
     }
+    println!()
 }
