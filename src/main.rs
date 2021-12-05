@@ -1,27 +1,27 @@
-const LATIN: [[&str; 6]; 5] = [
-    ["a", "b", "c", "d", "e", "f"],
-    ["g", "h", "i", "j", "k", "l"],
-    ["m", "n", "o", "p", "q", "r"],
-    ["s", "t", "u", "v", "w", "x"],
-    ["y", "z", "!", "?", ":", " "]
+const LATIN: [[char; 6]; 5] = [
+    ['a', 'b', 'c', 'd', 'e', 'f'],
+    ['g', 'h', 'i', 'j', 'k', 'l'],
+    ['m', 'n', 'o', 'p', 'q', 'r'],
+    ['s', 't', 'u', 'v', 'w', 'x'],
+    ['y', 'z', '!', '?', ':', ' ']
 ];
 
-const GALACTIC: [[&str; 6]; 5] = [
-    ["ᔑ", "ʖ", "ᓵ", "↸", "Ŀ", "⎓"],
-    ["ㅓ", "〒", "╎", "፧", "ꖌ", "ꖎ"],
-    ["ᒲ", "リ", "フ", "¡", "ᑑ", "።"],
-    ["ነ", "ﬧ", "⚍", "⍊", "∴", "/"],
-    ["॥", "Λ", "ʗ", "˨", "ᚴ", "ᚌ"]
+const GALACTIC: [[char; 6]; 5] = [
+    ['ᔑ', 'ʖ', 'ᓵ', '↸', 'Ŀ', '⎓'],
+    ['ㅓ', '〒', '╎', '፧', 'ꖌ', 'ꖎ'],
+    ['ᒲ', 'リ', 'フ', '¡', 'ᑑ', '።'],
+    ['ነ', 'ﬧ', '⚍', '⍊', '∴', '/'],
+    ['॥', 'Λ', 'ʗ', '˨', 'ᚴ', 'ᚌ']
 ];
 
 fn main() {
-    let text = ["d", "u", "p", "a"];
-    let mut reversed_text = text.iter().rev().collect::<Vec<_>>();
+    let text: Vec<char> = "rust B)".chars().collect();
+    let mut reversed_text: Vec<&char> = text.iter().rev().collect();
     encrypt(reversed_text.as_mut_slice());
 
 }
 
-fn index_of(letter: &str) -> (usize, usize) {
+fn index_of(letter: char) -> (usize, usize) {
     for row in 0..5 {
         let a= LATIN[row].iter().position(|&s| s == letter);
         match a {
@@ -35,9 +35,9 @@ fn index_of(letter: &str) -> (usize, usize) {
     return(0, 0);
 }
 
-fn encrypt(text: &mut [&&str]) {
-    for x in 0..4 {
-        let (row, column) = index_of(text[x]);
+fn encrypt(text: &mut [&char]) {
+    for x in 0..text.len() {
+        let (row, column) = index_of(*text[x]);
 
         if column+3 >= 6 {
             text[x] = &GALACTIC[row][(column+3)%6]
@@ -47,8 +47,8 @@ fn encrypt(text: &mut [&&str]) {
     }
 
     println!("\nEncrypted text:");
-    for letter in text {
-        print!("{}", letter)
-    }
-    println!()
+    // for letter in text {
+    //     print!('{}', letter)
+    // }
+    println!("{:?}", text)
 }
