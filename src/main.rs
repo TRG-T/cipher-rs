@@ -1,3 +1,5 @@
+use std::io;
+
 const LATIN: [[char; 6]; 5] = [
     ['a', 'b', 'c', 'd', 'e', 'f'],
     ['g', 'h', 'i', 'j', 'k', 'l'],
@@ -16,14 +18,19 @@ const GALACTIC: [[char; 6]; 5] = [
 const KEY: usize = 3;
 
 fn main() {
-    let text: Vec<char> = "whaat".chars().collect();
-    let mut reversed_text: Vec<&char> = text.iter().rev().collect();
-    encrypt(reversed_text.as_mut_slice());
+    println!("Enter the text to encrypt");
+    let mut user_input = String::new();
+    io::stdin()
+        .read_line(&mut user_input)
+        .expect("Failed to read input");
+
+    let mut text = user_input.trim().chars().collect::<Vec<_>>();
+    encrypt(text.as_mut_slice());
 } 
 
-fn index_of(letter: char) -> (usize, usize) {
+fn index_of(letter: &char) -> (usize, usize) {
     for row in 0..5 {
-        let a= LATIN[row].iter().position(|&s| s == letter);
+        let a = LATIN[row].iter().position(|s| s == letter);
         match a {
             Some(column) => {
                 print!("{} {} | ", row, column);
@@ -35,10 +42,11 @@ fn index_of(letter: char) -> (usize, usize) {
     return(0, 0);
 }
 
-fn encrypt(text: &mut [&char]) {
+fn encrypt(text: &mut [char]) {
+    let mut reversed_text: Vec<&char> = text.iter().rev().collect();
     for x in 0..text.len() {
-        let (row, column) = index_of(*text[x]);
-        text[x] = &GALACTIC[row][(column+KEY)%6]
+        let (row, column) = index_of(reversed_text[x]);
+        reversed_text[x] = &GALACTIC[row][(column+KEY)%6]
     }
 
     println!("\nEncrypted text:");
