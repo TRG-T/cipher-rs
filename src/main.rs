@@ -13,13 +13,13 @@ const GALACTIC: [[char; 6]; 5] = [
     ['ነ', 'ﬧ', '⚍', '⍊', '∴', '/'],
     ['॥', 'Λ', 'ʗ', '˨', 'ᚴ', 'ᚌ']
 ];
+const KEY: usize = 3;
 
 fn main() {
-    let text: Vec<char> = "rust B)".chars().collect();
+    let text: Vec<char> = "whaat".chars().collect();
     let mut reversed_text: Vec<&char> = text.iter().rev().collect();
     encrypt(reversed_text.as_mut_slice());
-
-}
+} 
 
 fn index_of(letter: char) -> (usize, usize) {
     for row in 0..5 {
@@ -38,17 +38,12 @@ fn index_of(letter: char) -> (usize, usize) {
 fn encrypt(text: &mut [&char]) {
     for x in 0..text.len() {
         let (row, column) = index_of(*text[x]);
-
-        if column+3 >= 6 {
-            text[x] = &GALACTIC[row][(column+3)%6]
-        } else {
-            text[x] = &GALACTIC[row][column+3]
-        }
+        text[x] = &GALACTIC[row][(column+KEY)%6]
     }
 
     println!("\nEncrypted text:");
-    // for letter in text {
-    //     print!('{}', letter)
-    // }
-    println!("{:?}", text)
+    for letter in text {
+        print!("{}", letter)
+    }
+    println!()
 }
