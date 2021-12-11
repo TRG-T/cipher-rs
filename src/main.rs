@@ -26,17 +26,14 @@ fn main() -> std::io::Result<()> {
         .default(0)
         .interact_on(&Term::stderr())?;
 
-    println!("{}", selection);
-
+    println!("Enter the text");
+    let mut user_input = String::new();
+    io::stdin()
+        .read_line(&mut user_input)
+        .expect("Failed to read input");
+    let mut text = user_input.trim().chars().collect::<Vec<_>>();
     match selection {
         0 => {
-            println!("Enter the text to encrypt");
-            let mut user_input = String::new();
-            io::stdin()
-                .read_line(&mut user_input)
-                .expect("Failed to read input");
-
-            let mut text = user_input.trim().chars().collect::<Vec<_>>();
             let encrypted_text = encrypt(text.as_mut_slice());
             
             println!("\nEncrypted text:");
@@ -46,13 +43,6 @@ fn main() -> std::io::Result<()> {
             println!();
         }
         1 => {
-            println!("Enter the text to decrypt");
-            let mut user_input = String::new();
-            io::stdin()
-                .read_line(&mut user_input)
-                .expect("Failed to read input");
-
-            let mut text = user_input.trim().chars().collect::<Vec<_>>();
             let decrypted_text = decrypt(text.as_mut_slice());
 
             println!("\nDecrypted text:");
