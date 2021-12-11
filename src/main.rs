@@ -32,10 +32,10 @@ fn main() -> std::io::Result<()> {
         .read_line(&mut user_input)
         .expect("Failed to read input");
     let mut text = user_input.trim().chars().collect::<Vec<_>>();
+
     match selection {
         0 => {
             let encrypted_text = encrypt(text.as_mut_slice());
-            
             println!("\nEncrypted text:");
             for letter in encrypted_text {
                 print!("{}", letter)
@@ -44,7 +44,6 @@ fn main() -> std::io::Result<()> {
         }
         1 => {
             let decrypted_text = decrypt(text.as_mut_slice());
-
             println!("\nDecrypted text:");
             for letter in decrypted_text {
                 print!("{}", letter)
@@ -55,7 +54,6 @@ fn main() -> std::io::Result<()> {
             println!("Something went wrong")
         }
     }
-
     Ok(())
 } 
 
@@ -83,16 +81,13 @@ fn index_of(letter: &char, choice: u8) -> (usize, usize) {
 }
 
 fn encrypt(text: &mut [char]) -> Vec<&char> {
-    let reversed_text: Vec<&char> = text.iter().rev().collect();
-    let mut encrypted_text: Vec<&char> = reversed_text;
+    let mut reversed_text: Vec<&char> = text.iter().rev().collect();
         for x in 0..text.len() {
-        let (row, column) = index_of(encrypted_text[x], 0);
-        encrypted_text[x] = &GALACTIC[row][(column+KEY)%6]
+        let (row, column) = index_of(reversed_text[x], 0);
+        reversed_text[x] = &GALACTIC[row][(column+KEY)%6]
     }
-
-    return encrypted_text;
+    return reversed_text;
 }
-
 
 fn decrypt(text: &mut [char]) -> Vec<&char> {
     let mut reversed_text: Vec<&char> = text.iter().rev().collect();
@@ -100,6 +95,5 @@ fn decrypt(text: &mut [char]) -> Vec<&char> {
         let (row, column) = index_of(reversed_text[x], 1);
         reversed_text[x] = &LATIN[row][(column-KEY)%6]
     }
-
     return reversed_text;
 }
