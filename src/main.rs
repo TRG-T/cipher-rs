@@ -36,19 +36,11 @@ fn main() -> std::io::Result<()> {
     match selection {
         0 => {
             let encrypted_text = encrypt(text.as_mut_slice());
-            println!("\nEncrypted text:");
-            for letter in encrypted_text {
-                print!("{}", letter)
-            }
-            println!();
+            println!("\nEncrypted text: {}", encrypted_text);
         }
         1 => {
             let decrypted_text = decrypt(text.as_mut_slice());
-            println!("\nDecrypted text:");
-            for letter in decrypted_text {
-                print!("{}", letter)
-            }
-            println!();
+            println!("\nDecrypted text: {}", decrypted_text);
         }
         _ => {
             println!("Something went wrong")
@@ -57,15 +49,15 @@ fn main() -> std::io::Result<()> {
     Ok(())
 } 
 
-fn index_of(letter: &char, choice: u8) -> (usize, usize) {
+fn index_of(letter: char, choice: u8) -> (usize, usize) {
     for row in 0..5 {
         let col: Option<usize>;
         match choice {
             0 => {
-                col = LATIN[row].iter().position(|s| s == letter);
+                col = LATIN[row].iter().position(|s| s == &letter);
             }
             1 => {
-                col = GALACTIC[row].iter().position(|s| s == letter);
+                col = GALACTIC[row].iter().position(|s| s == &letter);
             }
             _ => { col = None }
         }
@@ -80,20 +72,22 @@ fn index_of(letter: &char, choice: u8) -> (usize, usize) {
     return(0, 0);
 }
 
-fn encrypt(text: &mut [char]) -> Vec<&char> {
-    let mut reversed_text: Vec<&char> = text.iter().rev().collect();
-        for x in 0..text.len() {
-        let (row, column) = index_of(reversed_text[x], 0);
-        reversed_text[x] = &GALACTIC[row][(column+KEY)%6]
+fn encrypt(text: &mut [char]) -> String {
+    let reversed_text: String = text.iter().rev().collect();
+    let mut encrypted_text = String::from("");
+    for letter in reversed_text.chars() {
+        let (row, column) = index_of(letter, 0);
+         encrypted_text.push(GALACTIC[row][(column+KEY)%6])
     }
-    return reversed_text;
+    return encrypted_text;
 }
 
-fn decrypt(text: &mut [char]) -> Vec<&char> {
-    let mut reversed_text: Vec<&char> = text.iter().rev().collect();
-    for x in 0..text.len() {
-        let (row, column) = index_of(reversed_text[x], 1);
-        reversed_text[x] = &LATIN[row][(column-KEY)%6]
+fn decrypt(text: &mut [char]) -> String {
+    let reversed_text: String = text.iter().rev().collect();
+    let mut decrypted_text = String::from("");
+    for letter in reversed_text.chars() {
+        let (row, column) = index_of(letter, 1);
+        decrypted_text.push(LATIN[row][(column+KEY)%6])
     }
-    return reversed_text;
+    return decrypted_text;
 }
