@@ -1,13 +1,13 @@
-use std::io;
-use dialoguer::{ Select, theme::ColorfulTheme };
 use console::Term;
+use dialoguer::{theme::ColorfulTheme, Select};
+use std::io;
 
 const LATIN: [[char; 6]; 5] = [
     ['a', 'b', 'c', 'd', 'e', 'f'],
     ['g', 'h', 'i', 'j', 'k', 'l'],
     ['m', 'n', 'o', 'p', 'q', 'r'],
     ['s', 't', 'u', 'v', 'w', 'x'],
-    ['y', 'z', '!', '?', ':', ' ']
+    ['y', 'z', '!', '?', ':', ' '],
 ];
 
 const GALACTIC: [[char; 6]; 5] = [
@@ -15,7 +15,7 @@ const GALACTIC: [[char; 6]; 5] = [
     ['ㅓ', '〒', '╎', '፧', 'ꖌ', 'ꖎ'],
     ['ᒲ', 'リ', 'フ', '¡', 'ᑑ', '።'],
     ['ነ', 'ﬧ', '⚍', '⍊', '∴', '/'],
-    ['॥', 'Λ', 'ʗ', '˨', 'ᚴ', 'ᚌ']
+    ['॥', 'Λ', 'ʗ', '˨', 'ᚴ', 'ᚌ'],
 ];
 const KEY: usize = 3;
 
@@ -31,15 +31,15 @@ fn main() -> std::io::Result<()> {
     io::stdin()
         .read_line(&mut user_input)
         .expect("Failed to read input");
-    let mut text = user_input.trim().chars().collect::<Vec<_>>();
+    let text = user_input.trim();
 
     match selection {
         0 => {
-            let encrypted_text = encrypt(text.as_mut_slice());
+            let encrypted_text = encrypt(text);
             println!("\nEncrypted text: {}", encrypted_text);
         }
         1 => {
-            let decrypted_text = decrypt(text.as_mut_slice());
+            let decrypted_text = decrypt(text);
             println!("\nDecrypted text: {}", decrypted_text);
         }
         _ => {
@@ -47,47 +47,37 @@ fn main() -> std::io::Result<()> {
         }
     }
     Ok(())
-} 
-
-fn index_of(letter: char, choice: u8) -> (usize, usize) {
-    for row in 0..5 {
-        let col: Option<usize>;
-        match choice {
-            0 => {
-                col = LATIN[row].iter().position(|s| s == &letter);
-            }
-            1 => {
-                col = GALACTIC[row].iter().position(|s| s == &letter);
-            }
-            _ => { col = None }
-        }
-        match col {
-            Some(column) => {
-                print!("{} {} | ", row, column);
-                return(row, column);
-            }
-            None => {}
-        }
-    }
-    return(0, 0);
 }
 
-fn encrypt(text: &mut [char]) -> String {
-    let reversed_text: String = text.iter().rev().collect();
-    let mut encrypted_text = String::from("");
-    for letter in reversed_text.chars() {
-        let (row, column) = index_of(letter, 0);
-         encrypted_text.push(GALACTIC[row][(column+KEY)%6])
-    }
-    return encrypted_text;
+fn index_of(letter: char, choice: usize) -> (usize, usize) {
+    [LATIN, GALACTIC]
+        .get(choice)
+        .and_then(|map| {
+            map.iter().enumerate().find_map(|(row, row_slice)| {
+                let col = row_slice.iter().position(|&s| s == letter)?;
+                print!("{} {} | ", row, col);
+                Some((row, col))
+            })
+        })
+        .unwrap_or((0, 0))
 }
 
-fn decrypt(text: &mut [char]) -> String {
-    let reversed_text: String = text.iter().rev().collect();
-    let mut decrypted_text = String::from("");
-    for letter in reversed_text.chars() {
-        let (row, column) = index_of(letter, 1);
-        decrypted_text.push(LATIN[row][(column+KEY)%6])
-    }
-    return decrypted_text;
+fn encrypt(text: &str) -> String {
+    text.chars()
+        .rev()
+        .map(|letter| {
+            let (row, col) = index_of(letter, 0);
+            GALACTIC[row][(col + KEY) % 6]
+        })
+        .collect()
+}
+
+fn decrypt(text: &str) -> String {
+    text.chars()
+        .rev()
+        .map(|letter| {
+            let (row, col) = index_of(letter, 1);
+            LATIN[row][(col + KEY) % 6]
+        })
+        .collect()
 }
