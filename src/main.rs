@@ -17,7 +17,6 @@ const GALACTIC: [[char; 6]; 5] = [
     ['ነ', 'ﬧ', '⚍', '⍊', '∴', '/'],
     ['॥', 'Λ', 'ʗ', '˨', 'ᚴ', 'ᚌ'],
 ];
-const KEY: usize = 3;
 
 fn main() -> std::io::Result<()> {
     let selection = Select::with_theme(&ColorfulTheme::default())
@@ -27,19 +26,26 @@ fn main() -> std::io::Result<()> {
         .interact_on(&Term::stderr())?;
 
     println!("Enter the text");
-    let mut user_input = String::new();
+    let mut user_text = String::new();
     io::stdin()
-        .read_line(&mut user_input)
+        .read_line(&mut user_text)
         .expect("Failed to read input");
-    let text = user_input.trim();
+    let text = user_text.trim();
+
+    println!("Enter the key (text or number)");
+    let mut user_key = String::new();
+    io::stdin()
+        .read_line(&mut user_key)
+        .expect("Failed to read input");
+    let key = string_to_key(user_key.trim());
 
     match selection {
         0 => {
-            let encrypted_text = encrypt(text);
+            let encrypted_text = encrypt(text, key);
             println!("\nEncrypted text: {}", encrypted_text);
         }
         1 => {
-            let decrypted_text = decrypt(text);
+            let decrypted_text = decrypt(text, key);
             println!("\nDecrypted text: {}", decrypted_text);
         }
         _ => {
@@ -62,22 +68,40 @@ fn index_of(letter: char, choice: usize) -> (usize, usize) {
         .unwrap_or((0, 0))
 }
 
-fn encrypt(text: &str) -> String {
+fn string_to_key(text: &str) -> usize {
+    let mut key = 0;
+    for c in text.chars() {
+        match c.is_alphabetic() {
+            true => {
+                let (row, col) = index_of(c, 0);
+                key += row + col;
+            }
+            false => {
+                println!("{}", c);
+                key += c.to_digit(10).unwrap_or(0) as usize
+            }
+        }
+    }
+    println!("\nKey is: {}", key);
+    key
+}
+
+fn encrypt(text: &str, key: usize) -> String {
     text.chars()
         .rev()
         .map(|letter| {
             let (row, col) = index_of(letter, 0);
-            GALACTIC[row][(col + KEY) % 6]
+            GALACTIC[row][(col + key) % 6]
         })
         .collect()
 }
 
-fn decrypt(text: &str) -> String {
+fn decrypt(text: &str, key: usize) -> String {
     text.chars()
         .rev()
         .map(|letter| {
             let (row, col) = index_of(letter, 1);
-            LATIN[row][(col + KEY) % 6]
+            LATIN[row][(col + key) % 6]
         })
         .collect()
 }
