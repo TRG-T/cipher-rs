@@ -99,7 +99,7 @@ fn decrypt(text: &str, key: usize) -> String {
         .rev()
         .map(|letter| {
             let (row, col) = index_of(letter, 1);
-            LATIN[row][(col + key) % 6]
+            LATIN[row][(col + (key-2)) % 6]
         })
         .collect()
 }
