@@ -1,0 +1,1 @@
+A similar cipher written in the golang: [cipher-go](https://github.com/TRG-T/cipher-go)
