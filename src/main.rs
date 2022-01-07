@@ -42,11 +42,11 @@ fn main() -> std::io::Result<()> {
     match selection {
         0 => {
             let encrypted_text = encrypt(text, key);
-            println!("\nEncrypted text: {}", encrypted_text);
+            println!("Encrypted text: {}", encrypted_text);
         }
         1 => {
             let decrypted_text = decrypt(text, key);
-            println!("\nDecrypted text: {}", decrypted_text);
+            println!("Decrypted text: {}", decrypted_text);
         }
         _ => {
             println!("Something went wrong")
@@ -61,7 +61,6 @@ fn index_of(letter: char, choice: usize) -> (usize, usize) {
         .and_then(|map| {
             map.iter().enumerate().find_map(|(row, row_slice)| {
                 let col = row_slice.iter().position(|&s| s == letter)?;
-                print!("{} {} | ", row, col);
                 Some((row, col))
             })
         })
@@ -77,12 +76,11 @@ fn string_to_key(text: &str) -> usize {
                 key += row + col;
             }
             false => {
-                println!("{}", c);
                 key += c.to_digit(10).unwrap_or(0) as usize
             }
         }
     }
-    println!("\nKey is: {}", key);
+    println!("Key is: {}", key);
     key
 }
 
